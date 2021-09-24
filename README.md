@@ -41,11 +41,25 @@
 ### 4. ConfigMap and Secreat 
 - For configuration of application we use this feature. Whenever you change the configuration then you need to rebuild the project, push it to repository and need to rebuild that whole container that is not fare for the small changes like configuration. 
 - For that we use external ConfigMap that contains credentials like DB_URL, Other service that used by application and connect that Config Map with pod so you can change the configuration on the go.
-- Putting passowd, username, Secreate keys are not good if we put it in the plaintext in the ConfigMap. So for that we are using Secreate which will put all the things in the encoded format. 
+- Putting passowd, username, **Secreate keys** are not good if we put it in the plaintext in the ConfigMap. So for that we are using Secreate which will put all the things in the encoded format. 
 
 ### 5. Volums
 - Whenever you restart the DB's container. the data you have stored in that could be vinished that is not good for any application. we are making volums. volums could be local harddrive or a remote storage(cloud storage). we give the link to that and the volums could store data in that location insted of in the container. So even if our DB's container need to be replaced then we can easily manage our data.
 
 ### 6. Deployments
 - Whenever your main-app dies then you will have downtime for the application. In which the POD dies and another POD is connected to same service. here service is used as static ip address as well as loadbalancer in the application. which will forward all the requests to replica of the same app. 
-- Any appication replica(eg. DB) that requires the datastored on internal or external storage that will be used by the statefulset which will decide which of the POD will use the storage for operations. eg. MySql, Mongo-DB and all apps will use the StatefulSet in order to make the things persistent.
+- Any appication replica(eg. DB) that requires the datastored on internal or external storage that will be used by the **statefulset** which will decide which of the POD will use the storage for operations. eg. MySql, Mongo-DB and all apps will use the StatefulSet in order to make the things persistent.
+
+## Kubernetes Architecture
+### Master node
+- Four processes run on every master node
+	- **API Server:** Works as a cluster gateway. Initial request for updating something in the cluster comes here. It Acts as a gatekeepar for authentication!
+	-  **Scheduler :** After Api server authenticate the request coming from the user the scheduler will come in action for schedul for that application. Scheduler will look for the node which will having least amount of resources used and assign the whole pod to that worker node. Actually starting of the pod is again managed by kublets.
+	- **Controller Manager:** This process will detect the state change in the container like crashing of the container. If some pod dies then Controller manager send request to the scheduler and scheduler will do the same process above.
+	- **etcd:** This process is the brain of the cluster all the information about which pod is running where or the process described above get all the data that needed for processing will be stored in the etcd. it is Key  valuer store. (eg. what resources available?, Did the cluster state change?, Is the cluster healthy?)
+ 
+### Slave nodes or Worker node
+- Three processes runs on the slave node.
+	-  **Container runtime** (Docker)
+	- **Kubelet** (This process is responsible for manage the container runtime to manage the processes between the containers. Kubelet interacts with both - the container and node. Kubelet starts the pod with a container inside.)
+	- **Kube Proxy** (Kube proxy is the proxy responsible for communication between the nodes. It is intelligent enough that if the pod replica is in the same node then it could just manage to forward the same request to local replica rather that reduce the network overload. )
