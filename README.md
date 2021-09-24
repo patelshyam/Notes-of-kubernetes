@@ -30,3 +30,22 @@
 - Recreation of the pod can lead to new IP address which is not good if the application communicates using the IP address
 - So each pod also having permanent IP address or static IP address which is known as Static IP address.
 - Lifecycle of Pod and Service NOT connected so even if pod dies service stays there
+
+#### 3.1 External service
+- External service is service which will open communication between external sources. eg. when you want to access some website through the browser you need to open external service.
+#### 3.2 Internal service
+- This service is used for internal communication. eg. for databases you do not want that the databse could be accessed by the outside world so you will use the database service as internal service.
+#### 3.3 Ingress
+- When you make your application for production you will allow the traffic come to one IP address and then you will forward the traffic to other nodes of the application that could be managed by Ingress. eg. Domain-name connected to IP of ingress and Ingress will forward the request to service node.
+
+### 4. ConfigMap and Secreat 
+- For configuration of application we use this feature. Whenever you change the configuration then you need to rebuild the project, push it to repository and need to rebuild that whole container that is not fare for the small changes like configuration. 
+- For that we use external ConfigMap that contains credentials like DB_URL, Other service that used by application and connect that Config Map with pod so you can change the configuration on the go.
+- Putting passowd, username, Secreate keys are not good if we put it in the plaintext in the ConfigMap. So for that we are using Secreate which will put all the things in the encoded format. 
+
+### 5. Volums
+- Whenever you restart the DB's container. the data you have stored in that could be vinished that is not good for any application. we are making volums. volums could be local harddrive or a remote storage(cloud storage). we give the link to that and the volums could store data in that location insted of in the container. So even if our DB's container need to be replaced then we can easily manage our data.
+
+### 6. Deployments
+- Whenever your main-app dies then you will have downtime for the application. In which the POD dies and another POD is connected to same service. here service is used as static ip address as well as loadbalancer in the application. which will forward all the requests to replica of the same app. 
+- Any appication replica(eg. DB) that requires the datastored on internal or external storage that will be used by the statefulset which will decide which of the POD will use the storage for operations. eg. MySql, Mongo-DB and all apps will use the StatefulSet in order to make the things persistent.
