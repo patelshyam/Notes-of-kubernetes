@@ -63,3 +63,10 @@
 	-  **Container runtime** (Docker)
 	- **Kubelet** (This process is responsible for manage the container runtime to manage the processes between the containers. Kubelet interacts with both - the container and node. Kubelet starts the pod with a container inside.)
 	- **Kube Proxy** (Kube proxy is the proxy responsible for communication between the nodes. It is intelligent enough that if the pod replica is in the same node then it could just manage to forward the same request to local replica rather that reduce the network overload. )
+
+## Minikube
+- In production envirounment there are 2 Master node and 3 Worker node. For just testing perpous it is not possiable to setup the whole envirounment. So Minikube is the application that will simulate the whole thing using virtual box. It will having master processes and worker processed, docker as a container runtime already installed.
+-  There are theree ways using which the minikub can communicate with the API server 
+	1. Kubernetes UI
+	2. API
+	3. CLI (Kubectl) (This is the most powerful tool that can do anything with the cluster)
