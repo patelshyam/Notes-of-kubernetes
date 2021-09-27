@@ -97,7 +97,7 @@
 
 `minikube delete`
 
-`minikube start --vm-driver=hyperkit --v=7 --alsologtostderr`
+`minikube start --vm-driver=docker --v=7 --alsologtostderr`
 
 `minikube status`
 
@@ -109,13 +109,13 @@
 
 `kubectl get services`
 
-`kubectl create deployment nginx-depl --image=nginx`
+`kubectl create deployment {name} --image={imagelocation}`
 
 `kubectl get deployment`
 
 `kubectl get replicaset`
 
-`kubectl edit deployment nginx-depl`
+`kubectl edit deployment {name_of_deployment}`
 
 ### [](#debugging)debugging
 
@@ -123,19 +123,13 @@
 
 `kubectl exec -it {pod-name} -- bin/bash`
 
-### [](#create-mongo-deployment)create mongo deployment
+`kubectl logs {name_of_depl}-{pod-name}`
 
-`kubectl create deployment mongo-depl --image=mongo`
-
-`kubectl logs mongo-depl-{pod-name}`
-
-`kubectl describe pod mongo-depl-{pod-name}`
+`kubectl describe pod {name_of_depl}-{pod-name}`
 
 ### [](#delete-deplyoment)delete deplyoment
 
-`kubectl delete deployment mongo-depl`
-
-`kubectl delete deployment nginx-depl`
+`kubectl delete deployment {name_of_depl}`
 
 ### [](#create-or-edit-config-file)create or edit config file
 
@@ -151,6 +145,36 @@
 
 `kubectl delete -f nginx-deployment.yaml`
 
-#Metrics
 
 `kubectl top` The kubectl top command returns current CPU and memory usage for a cluster’s pods or nodes, or for a particular pod or node if specified.
+
+##  YAML file deployment
+- In general we don't use command line tools to deploy the things. we just user yaml file to deploy with desired configuration.
+- This YAML file is having three parts
+	1. Metadata (This should be configured by us)
+	2. Specifications (This should be configured by us)
+	3. Status (This will be used by kubernetes to check the what is actual state and what is desired state. This will be not managed by us.)
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: nginx-deployment
+ labels:
+ app: nginx
+spec:
+ replicas: 2
+ selector:
+	 matchLabels:
+		 app: nginx
+ template:
+	 metadata:
+	 labels:
+		 app: nginx
+	 spec:
+		 containers:
+		 - name: nginx
+		   image: nginx:1.16
+		   ports:
+		   - containerPort: 8080
+```
