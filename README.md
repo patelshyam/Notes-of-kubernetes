@@ -178,3 +178,5 @@ spec:
 		   ports:
 		   - containerPort: 8080
 ```
+
+```shell kubectl logs $(kubectl get pod |  awk 'match($1,"^app-") {print $1}') ```
